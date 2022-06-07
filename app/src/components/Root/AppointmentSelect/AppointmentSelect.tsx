@@ -1,52 +1,105 @@
-import axios from "axios";
-import styled from "styled-components";
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+import styled from 'styled-components'
+import { AppointmentDetail } from '../Root'
 
-import Broker from "./Broker";
+import Broker from './Broker'
 
 const Wrapper = styled.div`
   display: flex;
-`;
+  gap: 100px;
+`
 
 const SideBar = styled.div`
   width: 250px;
-`;
+`
 
-const Heading = styled.strong.attrs({ role: "heading", level: 2 })`
+const Heading = styled.strong.attrs({ role: 'heading', level: 2 })`
   display: block;
   font-size: 20px;
-`;
+`
 
 type BrokerAppointments = {
-  id: number;
-  name: string;
-  appointments: { id: number; brokerId: number; date: string }[];
-}[];
+  id: number
+  name: string
+  appointments: { id: number; brokerId: number; date: string }[]
+}[]
 
-const AppointmentSelect = () => {
-  axios
-    .get("http://localhost:8080/brokers")
-    .then(({ data }) => console.log(data));
-  axios
-    .get("http://localhost:8080/appointments")
-    .then(({ data }) => console.log(data));
+export type Broker = {
+  id: number
+  name: string
+}
+
+export type Appointment = {
+  id: number
+  brokerId: number
+  date: string
+}
+
+interface IAppointmentSelectProps {
+  selectedDetail: AppointmentDetail | null
+  setSelectedDetail: React.Dispatch<
+    React.SetStateAction<AppointmentDetail | null>
+  >
+}
+
+const AppointmentSelect: React.FC<IAppointmentSelectProps> = ({
+  selectedDetail,
+  setSelectedDetail,
+}) => {
+  const [brokerAppointments, setBrokerAppointments] =
+    useState<BrokerAppointments>([])
+
+  // why batch the request in single useEffect?
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data: brokers }: { data: Broker[] } = await axios.get(
+        'http://localhost:8080/brokers'
+      )
+      const { data: appointments }: { data: Appointment[] } = await axios.get(
+        'http://localhost:8080/appointments'
+      )
+
+      const brokerAppointments = brokers.map((broker) => {
+        const appointmentsBelongsToCurrentBroker = appointments.filter(
+          (appointment) => appointment.brokerId === broker.id
+        )
+        return {
+          ...broker,
+          appointments: appointmentsBelongsToCurrentBroker,
+        }
+      })
+
+      setBrokerAppointments(brokerAppointments)
+    }
+    fetchData()
+  }, [])
 
   return (
     <Wrapper>
       <SideBar>
         <Heading>Amazing site</Heading>
-        TODO: populate brokers
         <ul>
-          {/* {brokerAppointments.map((broker) => (
-            <Broker key={broker.id} broker={broker} />
-          ))} */}
+          {brokerAppointments.map((broker) => (
+            <Broker
+              key={broker.id}
+              broker={broker}
+              setSelectedDetail={setSelectedDetail}
+            />
+          ))}
         </ul>
       </SideBar>
-      <div>
+      <div data-testid="appointment-detail-section">
         <Heading>Appointment details</Heading>
-        TODO: get appointment details when clicking on one from the left side
+        {selectedDetail ? (
+          <div>
+            Appointment with {selectedDetail.broker.name} on{' '}
+            {selectedDetail.appointment.date}
+          </div>
+        ) : null}
       </div>
     </Wrapper>
-  );
-};
+  )
+}
 
-export default AppointmentSelect;
+export default AppointmentSelect

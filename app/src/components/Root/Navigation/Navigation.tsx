@@ -1,5 +1,6 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react'
+import styled from 'styled-components'
+import { AppointmentDetail } from '../Root'
 
 const Wrapper = styled.div`
   background-color: #e7e7e7;
@@ -9,17 +10,22 @@ const Wrapper = styled.div`
   padding: 24px 48px;
   box-shadow: 1px 1px 1px #b8b8b8;
   margin-bottom: 48px;
-`;
+`
 
-const Navigation = () => {
+interface INavigationProps {
+  selectedDetail: AppointmentDetail | null
+}
+
+const Navigation: React.FC<INavigationProps> = ({ selectedDetail }) => {
+  const { appointment, broker } = selectedDetail || {}
   return (
-    <Wrapper>
+    <Wrapper data-testid="navigation-appointment-detail">
       <strong>
-        Currently selected appointment: [appointment date] with [broker name]
+        Currently selected appointment: {appointment?.date} with {broker?.name}
       </strong>
       <strong>Welcome to Lendi</strong>
     </Wrapper>
-  );
-};
+  )
+}
 
-export default Navigation;
+export default Navigation
