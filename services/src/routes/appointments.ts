@@ -43,7 +43,6 @@ const sortByDateDescending = (items: IAppointment[]) => {
   })
 }
 router.get('/', (req, res) => {
-  //https://stackoverflow.com/questions/33299687/how-to-convert-dd-mm-yyyy-string-into-javascript-date-object
   let sortedAppointments = sortByDateDescending(appointments)
   sortedAppointments = sortByBrokerIdAscending(sortedAppointments)
 
