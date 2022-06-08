@@ -50,7 +50,6 @@ const AppointmentSelect: React.FC<IAppointmentSelectProps> = ({
   const [brokerAppointments, setBrokerAppointments] =
     useState<BrokerAppointments>([])
 
-  // why batch the request in single useEffect?
   useEffect(() => {
     const fetchData = async () => {
       const { data: brokers }: { data: Broker[] } = await axios.get(
