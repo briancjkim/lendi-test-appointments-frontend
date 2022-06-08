@@ -21,7 +21,7 @@ const Navigation: React.FC<INavigationProps> = ({ selectedDetail }) => {
   return (
     <Wrapper data-testid="navigation-appointment-detail">
       <strong>
-        Currently selected appointment: {appointment?.date} with {broker?.name}
+        Currently selected appointment: {appointment ? `${appointment.date} with ${broker?.name}` : ''}
       </strong>
       <strong>Welcome to Lendi</strong>
     </Wrapper>
