@@ -20,8 +20,6 @@ const Content = styled.div`
   border-radius: 5px;
 `
 
-//what is role, level attributes?
-//https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/heading_role
 const Heading = styled.strong.attrs({ role: 'heading', level: 1 })`
   display: block;
   font-size: 36px;

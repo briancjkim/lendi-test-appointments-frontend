@@ -61,7 +61,6 @@ const Broker = ({ broker, setSelectedDetail }: BrokerProps) => {
           </button>
         </StyledButtonWrapper>
       </StyledContainer>
-      {/* why use  ternary operator instead of &&*/}
       {showAppointments ? (
         <div
           style={{ display: 'flex', justifyContent: 'space-between' }}
